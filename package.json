@@ -27,7 +27,8 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "dotenv": "^5.0.1",
-    "express": "^4.14.1"
+    "express": "^4.14.1",
+    "jsev": "^0.5.2"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
