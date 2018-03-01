@@ -1,0 +1,39 @@
+{
+  "name": "mtg-pricer-api",
+  "version": "0.0.0",
+  "description": "Estimate the price of Magic: the Gathering cards via ebay and other sources.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nick-ng/mtg-pricer-api.git"
+  },
+  "author": {
+    "name": "Nick Ng"
+  },
+  "contributors": [
+    {
+      "name": "Lian Hoy Lee"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nick-ng/mtg-pricer-api/issues"
+  },
+  "homepage": "https://github.com/nick-ng/mtg-pricer-api#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "dotenv": "^5.0.1",
+    "express": "^4.14.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^7.7.0"
+  }
+}
