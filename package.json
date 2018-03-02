@@ -28,7 +28,9 @@
     "body-parser": "^1.17.1",
     "dotenv": "^5.0.1",
     "express": "^4.14.1",
-    "jsev": "^0.5.2"
+    "jsev": "^0.5.2",
+    "knex": "^0.14.4",
+    "pg": "^7.4.1"
   },
   "devDependencies": {
     "eslint": "^3.15.0",
