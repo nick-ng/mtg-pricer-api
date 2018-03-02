@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const { closestCardName } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 
 const PORT = process.env.PORT || 4000;
@@ -21,6 +22,8 @@ server.use((req, res, next) => {
 
 server.get('/check-card', async (req, res) => {
   // Get closest card name from mtg json
+  console.log('getting cards');
+  closestCardName(req.query.cardname);
 
   // Search ebay for listings
   const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
