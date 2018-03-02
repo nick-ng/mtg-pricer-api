@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+const { ebaySearch } = require('./services/ebay');
+
 const PORT = process.env.PORT || 4000;
 const PUBLIC_PATH = path.join(__dirname, 'public');
 // const INDEX = path.join(__dirname, 'public', 'index.html');
@@ -21,6 +23,8 @@ server.post('/checkCard', (req, res) => {
   // Add card to database and get price.
   console.log('req', req);
   console.log('res', res);
+  const a = ebaySearch('magic the gathering kitchen finks');
+  console.log('a', a);
 });
 
 server.post('/updateAllPrices', (req, res) => {
