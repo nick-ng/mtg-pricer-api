@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const { closestCardName } = require('./services/classifier');
+const { closestCardName, classifyCards } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 
 const PORT = process.env.PORT || 4000;
@@ -28,6 +28,8 @@ server.get('/check-card', async (req, res) => {
   // Search ebay for listings
   const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
 
+  const classifiedCards = classifyCards(searchResults);
+  console.log(classifiedCards[0]);
   // Classify listings
 
   // Calculate statistics about listing prices
@@ -35,7 +37,7 @@ server.get('/check-card', async (req, res) => {
   // Store statistics in database
 
   // Return price information for each set
-  res.json(searchResults);
+  res.json(classifiedCards[0]);
 });
 
 server.get('/update-all-prices', (req, res) => {
