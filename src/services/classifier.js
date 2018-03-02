@@ -17,9 +17,12 @@ async function loadCards() {
 }
 
 function classifyCards(listings) {
-  return listings.map(x => Object.assign(x, {
-    quantity: getCount(x.title),
-  }));
+  return listings.map(x => {
+    const quantity = getCount(x.title);
+    return Object.assign(x, {
+    quantity,
+    pricePerItem: x.price / quantity,
+  })});
 }
 
 module.exports = {

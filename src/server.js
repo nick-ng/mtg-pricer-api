@@ -32,7 +32,7 @@ server.get('/check-card', async (req, res) => {
   const classifiedListings = classifyCards(listings);
 
   // Calculate statistics about listing prices
-  const statistics = calculateStatistics(classifiedListings.map(listing => listing.price));
+  const statistics = calculateStatistics(classifiedListings.map(listing => listing.pricePerItem));
   // Store statistics in database
 
   // Return price information for each set
@@ -41,6 +41,7 @@ server.get('/check-card', async (req, res) => {
       card: req.query.cardname,
     },
     statistics,
+    classifiedListings,
   ));
 });
 
