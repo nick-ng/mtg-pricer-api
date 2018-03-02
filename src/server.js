@@ -19,17 +19,23 @@ server.use((req, res, next) => {
   next();
 });
 
-ebaySearch('magic the gathering kitchen finks');
+server.get('/check-card', async (req, res) => {
+  // Get closest card name from mtg json
 
-server.post('/checkCard', (req, res) => {
-  // Add card to database and get price.
-  console.log('req', req);
-  console.log('res', res);
-  const a = ebaySearch('magic the gathering kitchen finks');
-  console.log('a', a);
+  // Search ebay for listings
+  const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
+
+  // Classify listings
+
+  // Calculate statistics about listing prices
+
+  // Store statistics in database
+
+  // Return price information for each set
+  res.json(searchResults);
 });
 
-server.post('/updateAllPrices', (req, res) => {
+server.get('/update-all-prices', (req, res) => {
   // Get prices for all cards in database.
   console.log('req', req);
   console.log('res', res);

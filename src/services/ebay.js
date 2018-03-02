@@ -24,13 +24,9 @@ async function ebaySearch(query) {
       parameters,
     )
   )}`;
-  // console.log('queryB', queryB);
   const response = await fetch(queryB);
-  // console.log('aa', aa);
-  // const results = await aa._cb_findItemsByKeywords();
   const result = await response.json();
-  const items = result.findItemsByKeywordsResponse[0].searchResult[0].item
-  console.log('items', items);
+  const items = result.findItemsByKeywordsResponse[0].searchResult[0].item;
   return items;
 }
 
