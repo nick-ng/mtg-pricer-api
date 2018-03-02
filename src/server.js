@@ -2,12 +2,16 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const { closestCardName, classifyCards } = require('./services/classifier');
+const { loadCards, classifyCards } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
+const { simplifyListings } = require('./utils').ebayConditioner;
+const { calculateStatistics } = require('./services/statistics');
 
 const PORT = process.env.PORT || 4000;
 const PUBLIC_PATH = path.join(__dirname, 'public');
 // const INDEX = path.join(__dirname, 'public', 'index.html');
+
+loadCards();
 
 const server = express();
 server.use(bodyParser.json());
@@ -21,23 +25,23 @@ server.use((req, res, next) => {
 });
 
 server.get('/check-card', async (req, res) => {
-  // Get closest card name from mtg json
-  console.log('getting cards');
-  closestCardName(req.query.cardname);
-
   // Search ebay for listings
   const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
+  const listings = simplifyListings(searchResults);
 
-  const classifiedCards = classifyCards(searchResults);
-  console.log(classifiedCards[0]);
-  // Classify listings
+  const classifiedListings = classifyCards(listings);
 
   // Calculate statistics about listing prices
-
+  const statistics = calculateStatistics(classifiedListings.map(listing => listing.price));
   // Store statistics in database
 
   // Return price information for each set
-  res.json(classifiedCards[0]);
+  res.json(Object.assign(
+    {
+      card: req.query.cardname,
+    },
+    statistics,
+  ));
 });
 
 server.get('/update-all-prices', (req, res) => {

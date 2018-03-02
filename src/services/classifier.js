@@ -7,11 +7,7 @@ function getCount(str) {
   return matches ? +(matches[0].replace('x', '')) : 1;
 }
 
-console.log(getCount('5 hello'));
-console.log(getCount('hello x6'));
-console.log(getCount('hello x7'));
-
-async function closestCardName(initialCardName) {
+async function loadCards() {
   const dataPath = `${__dirname}/../../data`;
   if (fs.existsSync(`${dataPath}/AllCards.json`)) {
     return;
@@ -21,13 +17,12 @@ async function closestCardName(initialCardName) {
 }
 
 function classifyCards(listings) {
-  return listings.map(x => ({
-    listing: x,
-    quantity: getCount(x.title[0]),
+  return listings.map(x => Object.assign(x, {
+    quantity: getCount(x.title),
   }));
 }
 
 module.exports = {
-  closestCardName,
+  loadCards,
   classifyCards
 };
