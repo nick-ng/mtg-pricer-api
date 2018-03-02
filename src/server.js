@@ -3,7 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const PORT = process.env.PORT || 4000;
-const INDEX = path.join(__dirname, 'public', 'index.html');
+const PUBLIC_PATH = path.join(__dirname, 'public');
+// const INDEX = path.join(__dirname, 'public', 'index.html');
 
 const server = express();
 server.use(bodyParser.json());
@@ -12,7 +13,7 @@ server.use((req, res, next) => {
   res.set('Access-Control-Allow-Origin', '*');
   res.set('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   res.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-  res.set('content-type', 'application/json; charset=utf-8');
+  // res.set('content-type', 'application/json; charset=utf-8');
   next();
 });
 
@@ -28,5 +29,5 @@ server.post('/updateAllPrices', (req, res) => {
   console.log('res', res);
 });
 
-server.use((req, res) => res.sendFile(INDEX));
+server.use(express.static(PUBLIC_PATH));
 server.listen(PORT, () => console.log(`Listening on ${PORT}`));
