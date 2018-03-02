@@ -4,7 +4,7 @@
   "description": "Estimate the price of Magic: the Gathering cards via ebay and other sources.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "server": "node index.js"
   },
   "repository": {
@@ -32,6 +32,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jsev": "^0.5.2",
     "knex": "^0.14.4",
+    "nodemon": "^1.17.1",
     "pg": "^7.4.1"
   },
   "devDependencies": {

@@ -19,6 +19,8 @@ server.use((req, res, next) => {
   next();
 });
 
+ebaySearch('magic the gathering kitchen finks');
+
 server.post('/checkCard', (req, res) => {
   // Add card to database and get price.
   console.log('req', req);
