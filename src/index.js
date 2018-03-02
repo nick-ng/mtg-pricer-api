@@ -6,7 +6,7 @@ require('isomorphic-fetch');
 
 // Server
 try {
-require('./server');
+  require('./server');
 } catch (e) {
   console.log(e);
 }
