@@ -3,6 +3,8 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const { ebaySearch } = require('./services/ebay');
+const { simplifyListings } = require('./utils').ebayConditioner;
+const { calculateStatistics } = require('./services/statistics');
 
 const PORT = process.env.PORT || 4000;
 const PUBLIC_PATH = path.join(__dirname, 'public');
@@ -24,15 +26,20 @@ server.get('/check-card', async (req, res) => {
 
   // Search ebay for listings
   const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
-
+  const listings = simplifyListings(searchResults);
   // Classify listings
 
   // Calculate statistics about listing prices
-
+  const statistics = calculateStatistics(listings.map(listing => listing.price));
   // Store statistics in database
 
   // Return price information for each set
-  res.json(searchResults);
+  res.json(Object.assign(
+    {
+      card: req.query.cardname,
+    },
+    statistics,
+  ));
 });
 
 server.get('/update-all-prices', (req, res) => {
