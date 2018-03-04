@@ -4,6 +4,8 @@ const { fuzzyMatch } = require('../utils').string;
 const extraSetInfo = require('./extraSetInfo.json');
 const premiumInfo = require('./premiumInfo.json');
 
+console.log('premiumInfo', premiumInfo);
+
 const DATA_PATH = `${__dirname}/../../data`;
 
 function isSplitCard(cardName) {
@@ -137,16 +139,71 @@ async function getCardsSets(cardName) {
 }
 
 // Listing classifications
+function removeMatches(array, matchFunction) {
+  const matches = [];
+  let i = array.length;
+  while (i--) {
+    if (matchFunction(array[i])) {
+      matches.push(array.splice(i, 1)[0]);
+    }
+  }
+  return {
+    matches,
+    array,
+  };
+}
+
+function matchAnyTerms(input, terms) {
+  const filteredTerms = terms.filter(a => a);
+  return filteredTerms.some(term => input.toLowerCase().includes(term.toLowerCase()));
+}
+
 function getCount(str) {
   const matches = str.match(/((^|\s+)x\d($|\s+)|(^|\s+)\dx($|\s+)|^\d\s+)/g);
 
   return matches ? +(matches[0].replace('x', '')) : 1;
 }
 
-function classifyCards(listings) {
-  return listings.map(x => Object.assign(x, {
+function classifyCardsBySet(listings, cardName, cardSets) {
+  const clonedListings = [...listings];
+  const setListings = {};
+  cardSets.forEach((set) => {
+    let setTerms = [
+      set.name,
+      set.code,
+      set.oldCode,
+    ];
+    if (set.terms) {
+      setTerms = setTerms.concat(set.terms);
+    }
+    const { matches } = removeMatches(clonedListings, listing => matchAnyTerms(listing.title, setTerms));
+    setListings[set.code] = matches;
+  });
+  setListings.noset = clonedListings;
+  return setListings;
+}
+
+function classifyCardsByFoil(listings) {
+  const clonedListings = [...listings];
+  const { array, matches } = removeMatches(clonedListings, (listing) => {
+    console.log('listing', listing);
+    return matchAnyTerms(listing.title, premiumInfo.terms);
+  });
+  return {
+    foil: matches,
+    regular: array,
+  };
+}
+
+function classifyCards(listings, cardName, cardSets) {
+  const quantityListings = listings.map(x => Object.assign(x, {
     quantity: getCount(x.title),
   }));
+  const setListings = classifyCardsBySet(quantityListings, cardName, cardSets);
+  Object.keys(setListings).forEach((setCode) => {
+    setListings[setCode] = classifyCardsByFoil(setListings[setCode]);
+  });
+  return setListings;
 }
 
 module.exports = {

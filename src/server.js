@@ -9,7 +9,7 @@ const {
   getCards,
   getSets,
   getCardNames,
-  getMatchedCards
+  getMatchedCards,
 } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 const { simplifyListings } = require('./utils').ebayConditioner;
@@ -41,10 +41,14 @@ server.get('/check-card', async (req, res) => {
   const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
   const listings = simplifyListings(searchResults);
 
-  const classifiedListings = classifyCards(listings);
+  const cardName = (await getClosestCard(req.query.cardname)).closestName.name;
+  const cardSets = await getCardsSets(cardName);
+
+  const classifiedListings = classifyCards(listings, cardName, cardSets);
+
 
   // Calculate statistics about listing prices
-  const statistics = calculateStatistics(classifiedListings.map(listing => listing.price));
+  // const statistics = calculateStatistics(classifiedListings.map(listing => listing.price));
   // Store statistics in database
 
   // Return price information for each set
@@ -52,7 +56,10 @@ server.get('/check-card', async (req, res) => {
     {
       card: req.query.cardname,
     },
-    statistics,
+    {
+      // statistics,
+      classifiedListings,
+    },
   ));
 });
 
