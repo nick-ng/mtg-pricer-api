@@ -1,0 +1,25 @@
+{
+  "EXP": {
+    "terms": [
+      "expeditions"
+    ],
+    "foils": true,
+    "regular": false
+  },
+  "MPS": {
+    "terms": [
+      "masterpiece",
+      "inventions"
+    ],
+    "foils": true,
+    "regular": false
+  },
+  "MPS_AKH": {
+    "terms": [
+      "masterpiece",
+      "invocations"
+    ],
+    "foils": true,
+    "regular": false
+  }
+}
