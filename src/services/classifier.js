@@ -1,6 +1,8 @@
 const fs = require('fs');
 const getMtgJson = require('mtg-json');
 const { fuzzyMatch } = require('../utils').string;
+const extraSetInfo = require('./extraSetInfo.json');
+const premiumInfo = require('./premiumInfo.json');
 
 const DATA_PATH = `${__dirname}/../../data`;
 
@@ -8,12 +10,7 @@ function isSplitCard(cardName) {
   return cardName.includes(' // ');
 }
 
-function getCount(str) {
-  const matches = str.match(/((^|\s+)x\d($|\s+)|(^|\s+)\dx($|\s+)|^\d\s+)/g);
-
-  return matches ? +(matches[0].replace('x', '')) : 1;
-}
-
+// MTG JSON Classifier
 let allCards;
 async function getCards() {
   const cardPath = `${DATA_PATH}/AllCards.json`;
@@ -49,12 +46,6 @@ async function getSets() {
     return Promise.resolve(allSets);
   }
   return getMtgJson('sets', DATA_PATH);
-}
-
-function classifyCards(listings) {
-  return listings.map(x => Object.assign(x, {
-    quantity: getCount(x.title),
-  }));
 }
 
 async function getClosestCard(cardName) {
@@ -96,13 +87,26 @@ async function getCardsSets(cardName) {
     });
     return setCards.includes(cardName);
   });
-  console.log('matchingSets', matchingSets);
-  return matchingSets.map(set => ({
+  return matchingSets.map(set => (Object.assign({
     name: set.name,
     code: set.code,
     gathererCode: set.gathererCode,
     oldCode: set.oldCode,
     magicCardsInfoCode: set.magicCardsInfoCode,
+    regular: true,
+  }, extraSetInfo[set.code])));
+}
+
+// Listing classifications
+function getCount(str) {
+  const matches = str.match(/((^|\s+)x\d($|\s+)|(^|\s+)\dx($|\s+)|^\d\s+)/g);
+
+  return matches ? +(matches[0].replace('x', '')) : 1;
+}
+
+function classifyCards(listings) {
+  return listings.map(x => Object.assign(x, {
+    quantity: getCount(x.title),
   }));
 }
 
