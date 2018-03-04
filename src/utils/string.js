@@ -1,6 +1,9 @@
 /* eslint-disable no-continue */
 
-function fuzzyMatch(input, match) {
+function fuzzyMatch(inputU, matchU) {
+  const input = inputU.toLowerCase();
+  const match = matchU.toLowerCase();
+
   const [iLen, mLen] = [input.length, match.length];
   const matrix = [];
 
@@ -10,7 +13,7 @@ function fuzzyMatch(input, match) {
       continue;
     }
 
-    matrix[i] = [0];
+    matrix[i] = [i];
   }
 
   for (let i = 1; i <= iLen; i++) {
