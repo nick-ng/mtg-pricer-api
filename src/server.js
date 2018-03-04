@@ -2,16 +2,15 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const { loadCards, classifyCards } = require('./services/classifier');
+const { getClosestCard, getCardsSets, classifyCards } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 const { simplifyListings } = require('./utils').ebayConditioner;
 const { calculateStatistics } = require('./services/statistics');
+const { fuzzyMatch } = require('./utils').string;
 
 const PORT = process.env.PORT || 4000;
 const PUBLIC_PATH = path.join(__dirname, 'public');
 // const INDEX = path.join(__dirname, 'public', 'index.html');
-
-loadCards();
 
 const server = express();
 server.use(bodyParser.json());
@@ -42,6 +41,17 @@ server.get('/check-card', async (req, res) => {
     },
     statistics,
   ));
+});
+
+server.get('/test', async (req, res) => {
+  const matchInfo = await getClosestCard(req.query.cardname);
+  const test = await getCardsSets(matchInfo.closestName.name);
+  res.json(test);
+});
+
+server.get('/test2', (req, res) => {
+  const distance = fuzzyMatch(req.query.one, req.query.two);
+  res.json({ distance });
 });
 
 server.get('/update-all-prices', (req, res) => {

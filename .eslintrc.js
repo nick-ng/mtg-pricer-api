@@ -12,5 +12,9 @@ module.exports = {
         "no-console": "off",
         "max-len": "off",
         "no-plusplus": "off",
+        "no-underscore-dangle": "off",
     },
+    "globals": {
+      "fetch": true,
+    }
 };
