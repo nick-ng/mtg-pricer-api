@@ -13,16 +13,28 @@ function isSplitCard(cardName) {
 }
 
 // MTG JSON Classifier
-let allCards;
-async function getCards() {
+
+async function loadCards() {
   const cardPath = `${DATA_PATH}/AllCards.json`;
+
   if (fs.existsSync(cardPath)) {
     return Promise.resolve(require(cardPath)); // eslint-disable-line
   }
-  if (allCards) {
-    return Promise.resolve(allCards);
-  }
+
   return getMtgJson('cards', DATA_PATH);
+}
+
+function getNormalizedName(card) {
+  return card.names
+    ? card.names.join(' // ')
+    : card.name;
+}
+
+async function getCards() {
+  const cards = await loadCards();
+
+  return Object.values(cards)
+    .map(x => Object.assign(x, { normalizedName: getNormalizedName(x) }));
 }
 
 async function getCardNames() {
@@ -48,6 +60,33 @@ async function getSets() {
     return Promise.resolve(allSets);
   }
   return getMtgJson('sets', DATA_PATH);
+}
+
+function scoreMatch(name, actualName) {
+  return fuzzyMatch(name, actualName);
+}
+
+function shouldExclude(name, actualName) {
+  if (name.length <= actualName.length) {
+    return false;
+  }
+
+  return name.includes(actualName);
+}
+
+async function getMatchedCards(cardName) {
+  const cards = await getCards();
+  const cardNames = cards.map(x => x.normalizedName);
+
+  const relevantCards = cards
+    .map(x => ({
+      ...x,
+      matchScore: scoreMatch(cardName, x.normalizedName),
+      namesToExclude: cardNames.filter(n => shouldExclude(n, x.normalizedName)),
+    }))
+    .sort((a, b) => b.matchScore - a.matchScore);
+
+  return relevantCards.slice(0, 10);
 }
 
 async function getClosestCard(cardName) {
@@ -174,4 +213,5 @@ module.exports = {
   getCardsSets,
   classifyCards,
   getClosestCard,
+  getMatchedCards,
 };

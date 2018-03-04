@@ -2,8 +2,15 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+
 const {
-  getClosestCard, getCardsSets, classifyCards, getCards, getSets,
+  getClosestCard,
+  getCardsSets,
+  classifyCards,
+  getCards,
+  getSets,
+  getCardNames,
+  getMatchedCards,
 } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 const { simplifyListings } = require('./utils').ebayConditioner;
@@ -66,6 +73,16 @@ server.get('/test', async (req, res) => {
 server.get('/test2', (req, res) => {
   const distance = fuzzyMatch(req.query.one, req.query.two);
   res.json({ distance });
+});
+
+server.get('/card-names', async (req, res) => {
+  const names = await getCardNames();
+  res.json(names);
+});
+
+server.get('/matched-cards', async (req, res) => {
+  const cards = await getMatchedCards(req.query.cardname);
+  res.json(cards);
 });
 
 server.get('/update-all-prices', (req, res) => {
