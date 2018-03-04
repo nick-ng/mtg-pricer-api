@@ -21,5 +21,11 @@
     ],
     "foils": true,
     "regular": false
+  },
+  "pFNM": {
+    "terms": [
+      "promo",
+      "fnm"
+    ]
   }
 }
