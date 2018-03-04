@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const { getClosestCard, getCardsSets, classifyCards } = require('./services/classifier');
+const { getClosestCard, getCardsSets, classifyCards, getCards, getSets } = require('./services/classifier');
 const { ebaySearch } = require('./services/ebay');
 const { simplifyListings } = require('./utils').ebayConditioner;
 const { calculateStatistics } = require('./services/statistics');
@@ -11,6 +11,11 @@ const { fuzzyMatch } = require('./utils').string;
 const PORT = process.env.PORT || 4000;
 const PUBLIC_PATH = path.join(__dirname, 'public');
 // const INDEX = path.join(__dirname, 'public', 'index.html');
+
+console.log('Getting Card and Set information.');
+getCards();
+getSets();
+console.log('Finished getting Card and Set information.');
 
 const server = express();
 server.use(bodyParser.json());
