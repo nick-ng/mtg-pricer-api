@@ -4,8 +4,6 @@ const { fuzzyMatch } = require('../utils').string;
 const extraSetInfo = require('./extraSetInfo.json');
 const premiumInfo = require('./premiumInfo.json');
 
-console.log('premiumInfo', premiumInfo);
-
 const DATA_PATH = `${__dirname}/../../data`;
 
 function isSplitCard(cardName) {
@@ -185,10 +183,7 @@ function classifyCardsBySet(listings, cardName, cardSets) {
 
 function classifyCardsByFoil(listings) {
   const clonedListings = [...listings];
-  const { array, matches } = removeMatches(clonedListings, (listing) => {
-    console.log('listing', listing);
-    return matchAnyTerms(listing.title, premiumInfo.terms);
-  });
+  const { array, matches } = removeMatches(clonedListings, listing => matchAnyTerms(listing.title, premiumInfo.terms));
   return {
     foil: matches,
     regular: array,

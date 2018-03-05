@@ -45,22 +45,31 @@ server.get('/check-card', async (req, res) => {
   const cardSets = await getCardsSets(cardName);
 
   const classifiedListings = classifyCards(listings, cardName, cardSets);
-
+  const clonedListings = Object.assign({}, classifiedListings);
 
   // Calculate statistics about listing prices
-  // const statistics = calculateStatistics(classifiedListings.map(listing => listing.price));
+  Object.keys(clonedListings).forEach((setCode) => {
+    Object.keys(clonedListings[setCode]).forEach((premiumType) => {
+      const listingsBySetAndPremium = clonedListings[setCode][premiumType];
+      const listingPrices = listingsBySetAndPremium.map(listing => listing.price);
+      let statistics = {};
+      if (listingPrices.length > 0) {
+        statistics = calculateStatistics(listingPrices);
+      }
+      clonedListings[setCode][premiumType] = statistics;
+    });
+  });
+
+  const priceInfo = {
+    input: req.query.cardname,
+    card: cardName,
+    prices: clonedListings,
+    classifiedListings,
+  };
   // Store statistics in database
 
   // Return price information for each set
-  res.json(Object.assign(
-    {
-      card: req.query.cardname,
-    },
-    {
-      // statistics,
-      classifiedListings,
-    },
-  ));
+  res.json(priceInfo);
 });
 
 server.get('/test', async (req, res) => {
