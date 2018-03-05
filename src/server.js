@@ -49,7 +49,7 @@ server.get('/check-card', async (req, res) => {
   const cardSets = await getCardsSets(card.normalizedName);
 
   const classifiedListings = classifyCards(filteredListings, card.normalizedName, cardSets);
-  const clonedListings = Object.assign({}, classifiedListings);
+  const clonedListings = JSON.parse(JSON.stringify(classifiedListings));
 
   // Calculate statistics about listing prices
   Object.keys(clonedListings).forEach((setCode) => {
@@ -66,7 +66,7 @@ server.get('/check-card', async (req, res) => {
 
   const priceInfo = {
     input: req.query.cardname,
-    card,
+    card: card.normalizedName,
     prices: clonedListings,
     classifiedListings,
   };
