@@ -37,14 +37,18 @@ server.use((req, res, next) => {
 });
 
 server.get('/check-card', async (req, res) => {
+  const cards = await getMatchedCards(req.query.cardname);
   // Search ebay for listings
-  const searchResults = await ebaySearch(`magic the gathering ${req.query.cardname}`);
+  const card = cards[0];
+
+  const searchResults = await ebaySearch(`magic the gathering ${card.normalizedName}`);
   const listings = simplifyListings(searchResults);
+  const namesToExclude = card.namesToExclude.map(x => x.toLowerCase());
+  const filteredListings = listings.filter(x => !namesToExclude.some(n => x.title.toLowerCase().includes(n)));
 
-  const cardName = (await getClosestCard(req.query.cardname)).closestName.name;
-  const cardSets = await getCardsSets(cardName);
+  const cardSets = await getCardsSets(card.normalizedName);
 
-  const classifiedListings = classifyCards(listings, cardName, cardSets);
+  const classifiedListings = classifyCards(filteredListings, card.normalizedName, cardSets);
   const clonedListings = Object.assign({}, classifiedListings);
 
   // Calculate statistics about listing prices
@@ -62,7 +66,7 @@ server.get('/check-card', async (req, res) => {
 
   const priceInfo = {
     input: req.query.cardname,
-    card: cardName,
+    card,
     prices: clonedListings,
     classifiedListings,
   };
