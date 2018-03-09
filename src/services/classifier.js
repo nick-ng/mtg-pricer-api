@@ -11,7 +11,6 @@ function isSplitCard(cardName) {
 }
 
 // MTG JSON Classifier
-
 async function loadCards() {
   const cardPath = `${DATA_PATH}/AllCards.json`;
 
