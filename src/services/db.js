@@ -1,1 +1,7 @@
-// Database methods go here.
+function insertPrice(dbClient, { name, set, prices, timestamp}) {
+  return dbClient();
+}
+
+module.exports = {
+  insertPrice,
+};
