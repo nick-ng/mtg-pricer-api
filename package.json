@@ -7,6 +7,9 @@
     "start": "nodemon src/index.js",
     "server": "node src/index.js"
   },
+  "engines": {
+    "node": "9.8.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nick-ng/mtg-pricer-api.git"
