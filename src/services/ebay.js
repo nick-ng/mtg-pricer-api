@@ -5,7 +5,8 @@ const ebayParameters = {
   'SECURITY-APPNAME': process.env.EBAY_APP_ID,
   'OPERATION-NAME': 'findItemsByKeywords',
   'RESPONSE-DATA-FORMAT': 'JSON',
-  'paginationInput.entriesPerPage': 199,
+  'paginationInput.entriesPerPage': 100,
+  sortOrder: 'EndTimeSoonest',
 };
 
 async function ebaySearch(query) {

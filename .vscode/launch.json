@@ -8,7 +8,8 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceRoot}/src/index.js"
+      "program": "${workspaceRoot}/src/index.js",
+      "runtimeExecutable": "/home/nick/.nvm/versions/node/v9.8.0/bin/node"
     },
     {
       "type": "node",

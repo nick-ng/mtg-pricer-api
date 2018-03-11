@@ -55,7 +55,9 @@ server.get('/check-card', async (req, res) => {
   Object.keys(clonedListings).forEach((setCode) => {
     Object.keys(clonedListings[setCode]).forEach((premiumType) => {
       const listingsBySetAndPremium = clonedListings[setCode][premiumType];
-      const listingPrices = listingsBySetAndPremium.map(listing => listing.price);
+      const listingPrices = listingsBySetAndPremium
+        .filter(listing => listing.daysLeft < 7)
+        .map(listing => listing.price);
       let statistics = {};
       if (listingPrices.length > 0) {
         statistics = calculateStatistics(listingPrices);
