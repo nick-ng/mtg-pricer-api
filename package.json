@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/nick-ng/mtg-pricer-api#readme",
   "dependencies": {
+    "app-root-path": ">=2.0.1",
     "body-parser": "^1.17.1",
     "dotenv": "^5.0.1",
     "es6-promise": "^4.2.4",
