@@ -1,12 +1,6 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const knex = require('knex');
-
-const dbClient = knex({
-  client: 'pg',
-  connection: process.env.DATABASE_URL,
-});
 
 const {
   getClosestCard,
@@ -21,6 +15,7 @@ const { ebaySearch } = require('./services/ebay');
 const { simplifyListings } = require('./utils').ebayConditioner;
 const { calculateStatistics } = require('./services/statistics');
 const { fuzzyMatch } = require('./utils').string;
+const dbClient = require('./database/db-client');
 const db = require('./services/db')(dbClient);
 
 const PORT = process.env.PORT || 4000;

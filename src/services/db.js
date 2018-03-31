@@ -1,7 +1,9 @@
-function insertPrice(dbClient, { name, set, prices, timestamp}) {
-  return dbClient();
+function insertPrice(dbClient) {
+  return ({
+    name, set, prices, timestamp,
+  }) => dbClient();
 }
 
-module.exports = {
-  insertPrice,
-};
+module.exports = dbClient => ({
+  insertPrice: insertPrice(dbClient),
+});
