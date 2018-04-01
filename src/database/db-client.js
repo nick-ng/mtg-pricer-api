@@ -1,9 +1,9 @@
 const knex = require('knex');
 
 const config = require('./knexfile');
+require('./config-pg');
 
 const environment = process.env.NODE_ENV || 'local';
-
 const knexConfigured = knex(config[environment]);
 
 knexConfigured.migrate.latest(config.migrations)
